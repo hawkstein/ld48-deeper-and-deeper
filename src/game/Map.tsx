@@ -13,7 +13,7 @@ function Map({ map, okHandler }: MapProps) {
     <>
       <ul>
         {map.map(({ label }) => (
-          <li>{label}</li>
+          <li key={label}>{label}</li>
         ))}
       </ul>
       <div>

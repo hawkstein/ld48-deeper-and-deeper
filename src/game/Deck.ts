@@ -6,7 +6,7 @@ enum CardType {
   ATTACK,
 }
 
-type Card = {
+export type Card = {
   name: string;
   type: CardType;
 };
@@ -51,7 +51,16 @@ function buildDeck() {
     { ...accusation },
     { ...accusation },
   ];
-  return deck;
+  return shuffleDeck(deck);
 }
 
-export { buildDeck };
+const shuffleDeck = ([...deck]: Card[]) => {
+  let m = deck.length;
+  while (m) {
+    const i = Math.floor(Math.random() * m--);
+    [deck[m], deck[i]] = [deck[i], deck[m]];
+  }
+  return deck;
+};
+
+export { buildDeck, shuffleDeck };

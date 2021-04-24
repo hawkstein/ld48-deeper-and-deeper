@@ -1,0 +1,35 @@
+.wrap {
+  width: 100%;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 25% auto;
+  grid-template-rows: 50% 50%;
+  column-gap: 8px;
+  row-gap: 8px;
+}
+
+.ui {
+  border: 2px solid blueviolet;
+  border-radius: 8px;
+}
+
+.enemy {
+  border: 2px solid blueviolet;
+  border-radius: 8px;
+}
+
+.deck {
+  border: 2px solid blueviolet;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  justify-content: space-around;
+  text-align: center;
+  font-size: 32px;
+}
+
+.hand {
+  border: 2px solid blueviolet;
+  border-radius: 8px;
+}

@@ -8,7 +8,7 @@ import Dialogue from "./Dialogue";
 import Welcome from "./dialogue/Welcome";
 import Map from "./Map";
 import Encounter from "./Encounter";
-import { buildDeck } from "./Deck";
+import { buildDeck, shuffleDeck } from "./Deck";
 
 const enemies = {
   redHandler: {
@@ -66,6 +66,8 @@ const gameMachine = Machine(
       deck: buildDeck(),
       discard: [],
       hand: [],
+      suspicion: 0,
+      loyalty: 0.5,
     },
     states: {
       dialogue: {
@@ -97,27 +99,29 @@ const gameMachine = Machine(
         },
       },
       encounter: {
-        initial: "playerDecision",
+        initial: "startTurn",
         states: {
-          playerDecision: {},
+          startTurn: {
+            entry: ["drawHand"],
+            always: ["playerDecision"],
+          },
+          playerDecision: {
+            on: {
+              END_TURN: {
+                target: "endTurn",
+              },
+            },
+          },
+          endTurn: {
+            entry: ["evaluateEndTurn"],
+            always: [
+              { target: "playerSucceed", cond: "didPlayerSucceed" },
+              { target: "playerFailure", cond: "didPlayerFail" },
+              { target: "startTurn" },
+            ],
+          },
           playerSucceed: { type: "final" },
           playerFailure: { type: "final" },
-        },
-        on: {
-          "": [
-            { target: ".playerSucceed", cond: "didPlayerSucceed" },
-            { target: ".playerFailure", cond: "didPlayerFail" },
-          ],
-          MAP: {
-            target: "map",
-            guard: "isMapNext",
-            actions: ["moveLocation"],
-          },
-          DIALOGUE: {
-            target: "dialogue",
-            guard: "isDialogueNext",
-            actions: ["moveLocation"],
-          },
         },
       },
     },
@@ -143,8 +147,14 @@ const gameMachine = Machine(
           nextLocation < map.length && map[nextLocation].type === "dialogue"
         );
       },
-      didPlayerSucceed: () => false,
-      didPlayerFail: () => false,
+      didPlayerSucceed: (context) => {
+        //check enemy stats
+        return false;
+      },
+      didPlayerFail: (context) => {
+        const { suspicion } = context;
+        return suspicion >= 100;
+      },
     },
     actions: {
       moveLocation: assign({
@@ -155,6 +165,29 @@ const gameMachine = Machine(
           return visitedMap;
         },
       }),
+      drawHand: assign((context) => {
+        const drawAmount = 5;
+        const { deck, discard, hand } = context;
+        let secondDraw = 0;
+        if (deck.length < drawAmount) {
+          secondDraw = drawAmount - deck.length;
+        }
+        let returnHand = deck.slice(0, drawAmount);
+        let returnDeck = deck.slice(drawAmount);
+        let returnDiscard = [...discard, ...hand];
+        if (secondDraw > 0) {
+          returnDeck = shuffleDeck(returnDiscard);
+          returnDiscard = [];
+          returnHand = [...returnHand, ...returnDeck.slice(0, secondDraw)];
+          returnDeck = returnDeck.slice(secondDraw);
+        }
+        return {
+          hand: returnHand,
+          deck: returnDeck,
+          discard: returnDiscard,
+        };
+      }),
+      evaluateEndTurn: () => console.log("end turn"),
     },
   }
 );
@@ -182,7 +215,7 @@ function GameRouter({ state, send }) {
         />
       );
     case "encounter":
-      return <Encounter enemy={enemies[map[location].enemies]} />;
+      return <Encounter state={state} send={send} />;
     default:
       return null;
   }

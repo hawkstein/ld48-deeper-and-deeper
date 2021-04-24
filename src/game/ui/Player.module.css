@@ -1,0 +1,8 @@
+.player {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  justify-content: space-around;
+  text-align: center;
+  font-size: 32px;
+}
