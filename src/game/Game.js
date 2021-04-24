@@ -436,6 +436,7 @@ function GameRouter({ state, send }) {
         <Map
           map={state.context.map.filter((node) => node.type === "encounter")}
           okHandler={nextScreen}
+          enemies={enemies}
         />
       );
     case "encounter":
