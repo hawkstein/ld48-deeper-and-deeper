@@ -1,0 +1,24 @@
+.OptionScreen-title {
+  font-size: 6rem;
+  color: hsl(261.9, 54.4%, 53.5%);
+  margin: 0;
+}
+
+.OptionsScreen-list {
+  margin: 32px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.OptionsScreen-list li {
+  margin: 32px 0;
+  display: flex;
+  align-items: center;
+}
+
+.OptionsScreen-list span {
+  color: rgb(36, 18, 66);
+  font-size: 2rem;
+  font-weight: 800;
+  padding-right: 16px;
+}

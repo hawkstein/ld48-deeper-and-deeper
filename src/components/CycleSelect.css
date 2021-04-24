@@ -1,0 +1,9 @@
+.CycleSelect-button {
+  padding: 12px 42px;
+  border-radius: 12px;
+  font-size: 36px;
+  font-weight: 800;
+  background-color: rgb(47, 23, 88);
+  border: none;
+  color: white;
+}

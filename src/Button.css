@@ -1,0 +1,72 @@
+.Button-base {
+  position: relative;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  outline-offset: 4px;
+  transition: filter 250ms;
+  flex: 1;
+}
+.Button-shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background: hsl(0deg 0% 0% / 0.25);
+  will-change: transform;
+  transform: translateY(2px);
+  transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+.Button-edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background: linear-gradient(
+    to left,
+    hsl(261.7, 48.3%, 28%) 0%,
+    hsl(261.8, 48.1%, 41.6%) 8%,
+    hsl(261.8, 48.1%, 41.6%) 92%,
+    hsl(261.7, 48.3%, 28%) 100%
+  );
+}
+.Button-front {
+  display: block;
+  position: relative;
+  padding: 12px 42px;
+  border-radius: 12px;
+  font-size: 36px;
+  font-weight: 800;
+  color: white;
+  background: rgb(151, 120, 53);
+  will-change: transform;
+  transform: translateY(-4px);
+  transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+.Button-base:hover {
+  filter: brightness(110%);
+}
+.Button-base:hover .Button-front {
+  transform: translateY(-6px);
+  transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+}
+.Button-base:active .Button-front {
+  transform: translateY(-2px);
+  transition: transform 34ms;
+}
+.Button-base:hover .Button-shadow {
+  transform: translateY(4px);
+  transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+}
+.Button-base:active .Button-shadow {
+  transform: translateY(1px);
+  transition: transform 34ms;
+}
+.Button-base:focus:not(:focus-visible) {
+  outline: none;
+}
