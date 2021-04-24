@@ -1,6 +1,6 @@
 import styles from "./Encounter.module.css";
 import Player from "./ui/Player";
-import { Card } from "./Deck";
+import Hand from "./ui/Hand";
 
 type EncounterProps = {
   state: any;
@@ -24,12 +24,7 @@ function Encounter({ state, send }: EncounterProps) {
         <span>{discard.length} cards in the discard</span>
       </div>
       <div className={styles.hand}>
-        <ul>
-          {state.context.hand.map((card: Card, index: number) => (
-            <li key={`${index}`}>{card.name}</li>
-          ))}
-        </ul>
-        <button onClick={() => send("END_TURN")}>END TURN</button>
+        <Hand hand={hand} send={send} />
       </div>
     </div>
   );
