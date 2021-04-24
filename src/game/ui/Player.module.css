@@ -1,4 +1,5 @@
 .player {
+  height: 100%;
   display: flex;
   flex-direction: column;
   padding: 16px;

@@ -2,14 +2,19 @@ import styles from "./Player.module.css";
 
 type PlayerProps = {
   loyalty: number;
-  suspicion: number;
+  suspicionRed: number;
+  suspicionBlue: number;
 };
 
-function Player({ loyalty, suspicion }: PlayerProps) {
+function Player({ loyalty, suspicionRed, suspicionBlue }: PlayerProps) {
   return (
     <div className={styles.player}>
-      <span>Loyalty: {loyalty}</span>
-      <span>Suspicion: {suspicion}</span>
+      <span>Loyalty:</span>
+      <span>{loyalty}</span>
+      <span>Red Suspicion:</span>
+      <span>{suspicionRed}</span>
+      <span>Blue Suspicion:</span>
+      <span>{suspicionBlue}</span>
     </div>
   );
 }

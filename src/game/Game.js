@@ -6,15 +6,39 @@ import { useMachine } from "@xstate/react";
 import { Machine, assign } from "xstate";
 import Dialogue from "./Dialogue";
 import Welcome from "./dialogue/Welcome";
+import BeatTheGame from "./dialogue/BeatTheGame";
 import Map from "./Map";
 import Encounter from "./Encounter";
 import { buildDeck, shuffleDeck } from "./Deck";
 
+const sample = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+const RED_HANDLER = {
+  name: "Red Handler Lvl 1",
+  suspicion: 50,
+  roundsLeft: 5,
+  attacks: [
+    {
+      label: "Accusation!",
+      strength: 3,
+    },
+    {
+      label: "Betrayer!",
+      strength: 5,
+    },
+    {
+      label: "Common suspicion",
+      strength: 2,
+    },
+  ],
+};
+
 const enemies = {
-  redHandler: {
-    name: "Red Handler",
-    suspicion: 50,
-  },
+  redHandlerOne: { ...RED_HANDLER },
+  redHandlerTwo: { ...RED_HANDLER },
+  redHandlerThree: { ...RED_HANDLER },
+  redHandlerFour: { ...RED_HANDLER },
+  redHandlerFive: { ...RED_HANDLER },
 };
 
 function buildMap() {
@@ -31,26 +55,43 @@ function buildMap() {
     {
       type: "encounter",
       label: "Handler One",
-      enemies: "redHandler",
+      enemies: "redHandlerOne",
+      visited: false,
+    },
+    {
+      type: "map",
       visited: false,
     },
     {
       type: "encounter",
       label: "Handler Two",
-      enemies: "redHandler",
+      enemies: "redHandlerTwo",
+      visited: false,
+    },
+    {
+      type: "map",
       visited: false,
     },
     {
       type: "encounter",
       label: "Handler Three",
-      enemies: "redHandler",
+      enemies: "redHandlerThree",
+      visited: false,
+    },
+    {
+      type: "map",
       visited: false,
     },
     {
       type: "encounter",
       label: "Handler Four",
-      enemies: "redHandler",
+      enemies: "redHandlerFour",
       visited: false,
+    },
+    {
+      type: "dialogue",
+      content: <BeatTheGame />,
+      visited: true,
     },
   ];
   return map;
@@ -66,11 +107,16 @@ const gameMachine = Machine(
       deck: buildDeck(),
       discard: [],
       hand: [],
-      suspicion: 0,
+      suspicionRed: 0,
+      suspicionBlue: 0,
       loyalty: 0.5,
+      currentDefense: 0,
+      currentAttack: null,
+      enemies,
     },
     states: {
       dialogue: {
+        id: "dialogue",
         on: {
           MAP: {
             target: "map",
@@ -85,6 +131,7 @@ const gameMachine = Machine(
         },
       },
       map: {
+        id: "map",
         on: {
           ENCOUNTER: {
             target: "encounter",
@@ -99,11 +146,16 @@ const gameMachine = Machine(
         },
       },
       encounter: {
+        id: "encounter",
         initial: "startTurn",
         states: {
           startTurn: {
-            entry: ["drawHand"],
-            always: ["playerDecision"],
+            entry: ["drawHand", "pickAttack"],
+            always: [
+              { target: "playerSucceed", cond: "didPlayerSucceed" },
+              { target: "playerFailure", cond: "didPlayerFail" },
+              "playerDecision",
+            ],
           },
           playerDecision: {
             on: {
@@ -114,13 +166,23 @@ const gameMachine = Machine(
           },
           endTurn: {
             entry: ["evaluateEndTurn"],
+            always: [{ target: "startTurn" }],
+          },
+          playerSucceed: {
+            type: "final",
             always: [
-              { target: "playerSucceed", cond: "didPlayerSucceed" },
-              { target: "playerFailure", cond: "didPlayerFail" },
-              { target: "startTurn" },
+              {
+                target: "#map",
+                cond: "isMapNext",
+                actions: ["moveLocation"],
+              },
+              {
+                target: "#dialogue",
+                cond: "isDialogueNext",
+                actions: ["moveLocation"],
+              },
             ],
           },
-          playerSucceed: { type: "final" },
           playerFailure: { type: "final" },
         },
       },
@@ -148,12 +210,13 @@ const gameMachine = Machine(
         );
       },
       didPlayerSucceed: (context) => {
-        //check enemy stats
-        return false;
+        const { map, location } = context;
+        const enemy = enemies[map[location].enemies];
+        return enemy.suspicion >= 100 || enemy.roundsLeft <= 1;
       },
       didPlayerFail: (context) => {
-        const { suspicion } = context;
-        return suspicion >= 100;
+        const { suspicionRed, suspicionBlue } = context;
+        return suspicionRed >= 100 || suspicionBlue >= 100;
       },
     },
     actions: {
@@ -187,7 +250,20 @@ const gameMachine = Machine(
           discard: returnDiscard,
         };
       }),
-      evaluateEndTurn: () => console.log("end turn"),
+      pickAttack: assign({
+        currentAttack: (context) => {
+          const { map, location } = context;
+          const { attacks } = enemies[map[location].enemies];
+          return sample(attacks);
+        },
+      }),
+      evaluateEndTurn: (context) => {
+        const { map, location } = context;
+        const enemy = enemies[map[location].enemies];
+        if (enemy) {
+          enemy.roundsLeft = enemy.roundsLeft - 1;
+        }
+      },
     },
   }
 );
@@ -223,7 +299,11 @@ function GameRouter({ state, send }) {
 
 function BrainJarGame() {
   const [_, sendToApp] = React.useContext(AppContext);
-  const [gameState, send] = useMachine(gameMachine);
+  const [gameState, send] = useMachine(
+    gameMachine.withConfig({
+      appSend: sendToApp,
+    })
+  );
   return (
     <div className="Game-container">
       <GameRouter state={gameState} send={send} />
