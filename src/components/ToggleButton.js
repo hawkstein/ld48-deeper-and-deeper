@@ -14,7 +14,7 @@ function ToggleButton({ toggled }) {
   return (
     <div
       className="ToggleButton-outer"
-      data-isOn={isToggled}
+      data-ison={isToggled}
       onClick={toggleSwitch}
     >
       <motion.div className="ToggleButton-handle" layout transition={spring} />

@@ -9,12 +9,34 @@ import Welcome from "./dialogue/Welcome";
 import BeatTheGame from "./dialogue/BeatTheGame";
 import Map from "./Map";
 import Encounter from "./Encounter";
-import { buildDeck, shuffleDeck } from "./Deck";
+import { buildDeck, shuffleDeck, CardType } from "./Deck";
 
 const sample = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 const RED_HANDLER = {
   name: "Red Handler Lvl 1",
+  faction: "Red",
+  suspicion: 50,
+  roundsLeft: 5,
+  attacks: [
+    {
+      label: "Accusation!",
+      strength: 3,
+    },
+    {
+      label: "Betrayer!",
+      strength: 5,
+    },
+    {
+      label: "Common suspicion",
+      strength: 2,
+    },
+  ],
+};
+
+const BLUE_HANDLER = {
+  name: "Red Handler Lvl 1",
+  faction: "Blue",
   suspicion: 50,
   roundsLeft: 5,
   attacks: [
@@ -37,8 +59,9 @@ const enemies = {
   redHandlerOne: { ...RED_HANDLER },
   redHandlerTwo: { ...RED_HANDLER },
   redHandlerThree: { ...RED_HANDLER },
-  redHandlerFour: { ...RED_HANDLER },
-  redHandlerFive: { ...RED_HANDLER },
+  blueHandlerOne: { ...BLUE_HANDLER },
+  blueHandlerTwo: { ...BLUE_HANDLER },
+  blueHandlerThree: { ...BLUE_HANDLER },
 };
 
 function buildMap() {
@@ -65,7 +88,7 @@ function buildMap() {
     {
       type: "encounter",
       label: "Handler Two",
-      enemies: "redHandlerTwo",
+      enemies: "blueHandlerOne",
       visited: false,
     },
     {
@@ -75,7 +98,7 @@ function buildMap() {
     {
       type: "encounter",
       label: "Handler Three",
-      enemies: "redHandlerThree",
+      enemies: "redHandlerTwo",
       visited: false,
     },
     {
@@ -85,7 +108,7 @@ function buildMap() {
     {
       type: "encounter",
       label: "Handler Four",
-      enemies: "redHandlerFour",
+      enemies: "blueHandlerTwo",
       visited: false,
     },
     {
@@ -97,6 +120,51 @@ function buildMap() {
   return map;
 }
 
+const drawCards = ({ drawAmount, context }) => {
+  const { deck, discard, hand } = context;
+  let secondDraw = 0;
+  if (deck.length < drawAmount) {
+    secondDraw = drawAmount - deck.length;
+  }
+  let returnHand = deck.slice(0, drawAmount);
+  let returnDeck = deck.slice(drawAmount);
+  let returnDiscard = [...discard, ...hand];
+  if (secondDraw > 0) {
+    returnDeck = shuffleDeck(returnDiscard);
+    returnDiscard = [];
+    returnHand = [...returnHand, ...returnDeck.slice(0, secondDraw)];
+    returnDeck = returnDeck.slice(secondDraw);
+  }
+  return {
+    hand: returnHand,
+    deck: returnDeck,
+    discard: returnDiscard,
+    handState: [],
+  };
+};
+
+const drawCardToTable = ({ drawAmount, context }) => {
+  const { deck, discard } = context;
+  let secondDraw = 0;
+  if (deck.length < drawAmount) {
+    secondDraw = drawAmount - deck.length;
+  }
+  let theDraw = deck.slice(0, drawAmount);
+  let returnDeck = deck.slice(drawAmount);
+  let returnDiscard = [...discard];
+  if (secondDraw > 0) {
+    returnDeck = shuffleDeck(returnDiscard);
+    returnDiscard = [];
+    theDraw = [...theDraw, ...returnDeck.slice(0, secondDraw)];
+    returnDeck = returnDeck.slice(secondDraw);
+  }
+  return {
+    cards: theDraw,
+    deck: returnDeck,
+    discard: returnDiscard,
+  };
+};
+
 const gameMachine = Machine(
   {
     id: "game",
@@ -107,10 +175,13 @@ const gameMachine = Machine(
       deck: buildDeck(),
       discard: [],
       hand: [],
-      suspicionRed: 0,
-      suspicionBlue: 0,
+      handState: [],
+      tableCards: [],
+      suspicionRed: 50,
+      suspicionBlue: 50,
       loyalty: 0.5,
-      currentDefense: 0,
+      defenseBonus: 0,
+      attackBonus: 0,
       currentAttack: null,
       enemies,
     },
@@ -162,6 +233,40 @@ const gameMachine = Machine(
               END_TURN: {
                 target: "endTurn",
               },
+              [CardType.ACTION]: {
+                actions: ["useActionCard"],
+              },
+              [CardType.IDENTITY]: {
+                target: ".pushYourLuck",
+                actions: ["useIdentityCard"],
+              },
+              [CardType.RESOURCE]: {
+                actions: ["useResourceCard"],
+              },
+              [CardType.ATTACK]: {
+                actions: ["useAttackCard"],
+              },
+            },
+            initial: "pickCards",
+            states: {
+              pickCards: {},
+              pushYourLuck: {
+                id: "pushYourLuck",
+                entry: [
+                  "drawCardForIdentity",
+                  (context) => {
+                    console.log(context.tableCards);
+                  },
+                ],
+                on: {
+                  NO_MORE: {
+                    target: "pickCards",
+                  },
+                  UNO_MAS: {
+                    action: ["drawCardForIdentity"],
+                  },
+                },
+              },
             },
           },
           endTurn: {
@@ -212,7 +317,7 @@ const gameMachine = Machine(
       didPlayerSucceed: (context) => {
         const { map, location } = context;
         const enemy = enemies[map[location].enemies];
-        return enemy.suspicion >= 100 || enemy.roundsLeft <= 1;
+        return enemy.suspicion >= 100 || enemy.roundsLeft <= 0;
       },
       didPlayerFail: (context) => {
         const { suspicionRed, suspicionBlue } = context;
@@ -229,26 +334,7 @@ const gameMachine = Machine(
         },
       }),
       drawHand: assign((context) => {
-        const drawAmount = 5;
-        const { deck, discard, hand } = context;
-        let secondDraw = 0;
-        if (deck.length < drawAmount) {
-          secondDraw = drawAmount - deck.length;
-        }
-        let returnHand = deck.slice(0, drawAmount);
-        let returnDeck = deck.slice(drawAmount);
-        let returnDiscard = [...discard, ...hand];
-        if (secondDraw > 0) {
-          returnDeck = shuffleDeck(returnDiscard);
-          returnDiscard = [];
-          returnHand = [...returnHand, ...returnDeck.slice(0, secondDraw)];
-          returnDeck = returnDeck.slice(secondDraw);
-        }
-        return {
-          hand: returnHand,
-          deck: returnDeck,
-          discard: returnDiscard,
-        };
+        return drawCards({ drawAmount: 5, context });
       }),
       pickAttack: assign({
         currentAttack: (context) => {
@@ -257,13 +343,75 @@ const gameMachine = Machine(
           return sample(attacks);
         },
       }),
-      evaluateEndTurn: (context) => {
-        const { map, location } = context;
+      evaluateEndTurn: assign((context) => {
+        const {
+          map,
+          location,
+          suspicionRed,
+          suspicionBlue,
+          currentAttack,
+        } = context;
         const enemy = enemies[map[location].enemies];
         if (enemy) {
           enemy.roundsLeft = enemy.roundsLeft - 1;
         }
+        console.log(enemy.faction === "Red" ? 1 : 0);
+        return {
+          suspicionRed:
+            suspicionRed +
+            currentAttack.strength * (enemy.faction === "Red" ? 1 : 0),
+          suspicionBlue:
+            suspicionBlue +
+            currentAttack.strength * (enemy.faction === "Blue" ? 1 : 0),
+          discard: [...context.discard, ...context.tableCards],
+          tableCards: [],
+        };
+      }),
+      useActionCard: assign((context, event) => {
+        console.log(`Action! ${event.card.id}`);
+        const { map, location, loyalty, handState } = context;
+        const enemy = enemies[map[location].enemies];
+        const adjust = enemy.faction === "Red" ? 0.1 : -0.1;
+        return {
+          loyalty: Math.max(Math.min(1, loyalty + adjust), 0),
+          handState: [...handState, event.card.id],
+        };
+      }),
+      useResourceCard: (context, event) => {
+        console.log(`Resource! ${event.card.id}`);
       },
+      useIdentityCard: assign((context, event) => {
+        console.log(`Identity! ${event.card.id}`);
+        const { handState } = context;
+        return {
+          handState: [...handState, event.card.id],
+          discard: [...context.discard, ...context.tableCards],
+          tableCards: [],
+        };
+      }),
+      useAttackCard: assign((context, event) => {
+        console.log(`Attack! ${event.card.id}`);
+        const { map, location, handState } = context;
+        const enemy = enemies[map[location].enemies];
+        if (enemy) {
+          enemy.suspicion += 3;
+        }
+        return {
+          handState: [...handState, event.card.id],
+        };
+      }),
+      drawCardForIdentity: assign((context) => {
+        const { tableCards } = context;
+        const { cards, deck, discard } = drawCardToTable({
+          drawAmount: 1,
+          context,
+        });
+        return {
+          tableCards: [...tableCards, ...cards],
+          deck,
+          discard,
+        };
+      }),
     },
   }
 );

@@ -13,6 +13,7 @@ function Encounter({ state, send }: EncounterProps) {
     deck,
     discard,
     hand,
+    handState,
     map,
     location,
     enemies,
@@ -36,7 +37,7 @@ function Encounter({ state, send }: EncounterProps) {
         <span>{discard.length} cards in the discard</span>
       </div>
       <div className={styles.hand}>
-        <Hand hand={hand} send={send} />
+        <Hand hand={hand} handState={handState} send={send} />
       </div>
     </div>
   );
