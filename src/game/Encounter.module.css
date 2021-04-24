@@ -11,11 +11,13 @@
 .ui {
   border: 2px solid blueviolet;
   border-radius: 8px;
+  background-color: white;
 }
 
 .enemy {
   border: 2px solid blueviolet;
   border-radius: 8px;
+  background-color: white;
 }
 
 .deck {
@@ -27,9 +29,11 @@
   justify-content: space-around;
   text-align: center;
   font-size: 32px;
+  background-color: white;
 }
 
 .hand {
   border: 2px solid blueviolet;
   border-radius: 8px;
+  background-color: white;
 }

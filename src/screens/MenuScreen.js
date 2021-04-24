@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import AppContext from "../AppContext";
 import Button from "../Button";
 import "./Screen.css";
+import title from "../images/Title.svg";
 
 const variants = {
   setup: { x: 300, opacity: 0 },
@@ -20,22 +21,6 @@ const variants = {
   },
 };
 
-/**
- *       <div>
-        <img
-          alt="Brain Jar Title"
-          aria-label="Brain Jar Game"
-          src={title}
-          style={{
-            paddingTop: "40px",
-            width: "min(100%, 600px)",
-            margin: "0 auto",
-            display: "block",
-          }}
-        />
-      </div>
- */
-
 function MenuScreen() {
   const [_, send] = React.useContext(AppContext);
   return (
@@ -47,6 +32,19 @@ function MenuScreen() {
       animate="entrance"
       exit="exit"
     >
+      <div>
+        <img
+          alt="Deep Cover Title"
+          aria-label="Deep Cover Game"
+          src={title}
+          style={{
+            paddingTop: "40px",
+            width: "min(100%, 600px)",
+            margin: "0 auto",
+            display: "block",
+          }}
+        />
+      </div>
       <ul className="App-list">
         <li>
           <Button
