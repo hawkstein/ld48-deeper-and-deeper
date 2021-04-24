@@ -15,3 +15,12 @@
   padding: 16px;
   text-align: center;
 }
+
+.options {
+  display: flex;
+  justify-content: center;
+}
+
+.options > div {
+  padding-top: 32px;
+}

@@ -12,8 +12,10 @@ function Hand({ hand, send }: { hand: Card[]; send: any }) {
           </li>
         ))}
       </ul>
-      <div>
-        <Button onClick={() => send("END_TURN")}>END TURN</Button>
+      <div className={styles.options}>
+        <div>
+          <Button onClick={() => send("END_TURN")}>END TURN</Button>
+        </div>
       </div>
     </>
   );
