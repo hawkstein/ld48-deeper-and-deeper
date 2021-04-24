@@ -1,3 +1,5 @@
+import styles from "./Enemy.module.css";
+
 type EnemyProps = {
   stats: any;
   attack: any;
@@ -6,11 +8,11 @@ type EnemyProps = {
 function Enemy({ stats, attack }: EnemyProps) {
   const { name, suspicion, roundsLeft } = stats;
   return (
-    <div>
+    <div className={styles.enemy}>
       <span>You are facing: {name}</span>
       <span>Suspicion: {suspicion}</span>
       <span>Rounds left: {roundsLeft}</span>
-      <span>They {attack.label}</span>
+      <span>Attack: {attack.label}</span>
     </div>
   );
 }

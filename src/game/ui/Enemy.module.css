@@ -1,0 +1,8 @@
+.enemy {
+  font-size: 48px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: space-around;
+  height: 100%;
+}

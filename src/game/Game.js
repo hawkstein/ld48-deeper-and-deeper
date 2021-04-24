@@ -35,7 +35,7 @@ const RED_HANDLER = {
 };
 
 const BLUE_HANDLER = {
-  name: "Red Handler Lvl 1",
+  name: "Blue Handler Lvl 1",
   faction: "Blue",
   suspicion: 50,
   roundsLeft: 5,
