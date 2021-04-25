@@ -1,14 +1,8 @@
-import { Card, CardType } from "../Deck";
+import { Card } from "../Deck";
 import styles from "./Hand.module.css";
 import Button from "../../Button";
-
-function cardState(id: string | undefined, handState: string[]) {
-  if (id && handState.includes(id)) {
-    return styles.disabledCard;
-  } else {
-    return ``;
-  }
-}
+import { motion } from "framer-motion";
+import DisplayCard from "./DisplayCard";
 
 function Hand({
   hand,
@@ -21,27 +15,18 @@ function Hand({
 }) {
   return (
     <>
-      <ul className={styles.hand}>
-        {hand.map((card: Card, index: number) => (
-          <li
-            key={`${index}`}
-            className={`${styles.card} ${cardState(card.id, handState)}${
-              card.type === CardType.FLAW ? styles.flaw : ``
-            }`}
-            onClick={() => {
-              if (card.id && !handState.includes(card.id)) {
-                send(card.type, { card });
-              }
-            }}
-          >
-            <span className={styles.title}>{card.name}</span>
-            <span className={styles.description}>{card.description}</span>
-            {card.type === CardType.IDENTITY && (
-              <span>Defense: {card.bonus}</span>
-            )}
-          </li>
+      <motion.ul className={styles.hand}>
+        {hand.map((card: Card, index: number, cards) => (
+          <DisplayCard
+            key={`${card.id}-${index}`}
+            card={card}
+            index={index}
+            cards={cards}
+            send={send}
+            handState={handState}
+          />
         ))}
-      </ul>
+      </motion.ul>
       <div className={styles.options}>
         <div>
           <Button onClick={() => send("END_TURN")}>END TURN</Button>

@@ -1,5 +1,6 @@
 import Button from "../Button";
 import styles from "./Map.module.css";
+import { motion } from "framer-motion";
 
 type MapProps = {
   map: {
@@ -20,9 +21,31 @@ const getStyle = (visited: boolean, faction: "Red" | "Blue") => {
   }
 };
 
+const variants = {
+  setup: { x: 300, opacity: 0 },
+  entrance: {
+    x: 0,
+    opacity: 1,
+    transition: {
+      delay: 0.3,
+    },
+  },
+  exit: {
+    x: -300,
+    opacity: 0,
+  },
+};
+
 function Map({ map, okHandler, enemies: enemyMap }: MapProps) {
   return (
-    <div className={styles.map}>
+    <motion.section
+      key="map"
+      variants={variants}
+      initial="setup"
+      animate="entrance"
+      exit="exit"
+      className={styles.map}
+    >
       <h1>Your route to freedom... or power...</h1>
       <ul>
         {map.map(({ visited, label, enemies }) => (
@@ -40,7 +63,7 @@ function Map({ map, okHandler, enemies: enemyMap }: MapProps) {
       <div>
         <Button onClick={okHandler}>OK</Button>
       </div>
-    </div>
+    </motion.section>
   );
 }
 

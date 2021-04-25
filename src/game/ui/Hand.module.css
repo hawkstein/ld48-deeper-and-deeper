@@ -1,31 +1,11 @@
 .hand {
   margin: 0;
-  padding: 0;
+  padding: 10px 0;
   list-style: none;
   display: flex;
-  width: 100%;
+  width: 95%;
+  margin: 0 auto;
   justify-content: space-between;
-}
-
-.card {
-  background-color: burlywood;
-  border-radius: 8px;
-  height: 300px;
-  width: 160px;
-  padding: 16px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-}
-
-.disabledCard {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.flaw {
-  cursor: auto;
 }
 
 .options {
@@ -35,14 +15,4 @@
 
 .options > div {
   padding-top: 32px;
-}
-
-.title {
-  font-weight: 800;
-  padding-bottom: 16px;
-}
-
-.description {
-  color: rgb(122, 71, 3);
-  text-align: left;
 }

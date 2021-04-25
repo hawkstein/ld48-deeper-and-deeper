@@ -35,7 +35,7 @@
 .hand {
   border: 2px solid blueviolet;
   border-radius: 8px;
-  background-color: white;
+  background-color: rgb(111, 39, 121);
   grid-column-start: 1;
   grid-column-end: 4;
 }

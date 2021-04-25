@@ -39,28 +39,36 @@ function ScreenRouter() {
   const [state] = React.useContext(AppContext);
   const rootState = state.toStrings()[0];
   return (
-    <AnimatePresence>
-      {rootState === "menu" && <MenuScreen />}
-      {rootState === "options" && <OptionsScreen />}
-      {rootState === "play" && (
-        <motion.section
-          key="play-screen"
-          initial={{ x: 300, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: -300, opacity: 0 }}
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            padding: "20px",
-            display: "flex",
-          }}
-        >
-          <Game />
-        </motion.section>
-      )}
-      {rootState === "gameOver" && <GameOverScreen />}
-    </AnimatePresence>
+    <>
+      <AnimatePresence>
+        {rootState === "menu" && <MenuScreen />}
+      </AnimatePresence>
+      <AnimatePresence>
+        {rootState === "options" && <OptionsScreen />}
+      </AnimatePresence>
+      <AnimatePresence>
+        {rootState === "play" && (
+          <motion.section
+            key="play-screen"
+            initial={{ x: 300, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -300, opacity: 0 }}
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              padding: "20px",
+              display: "flex",
+            }}
+          >
+            <Game />
+          </motion.section>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {rootState === "gameOver" && <GameOverScreen />}
+      </AnimatePresence>
+    </>
   );
 }
 

@@ -1,0 +1,72 @@
+.card {
+  background-color: white;
+  border-radius: 8px;
+  height: 320px;
+  width: 216px;
+  padding: 4px;
+  text-align: center;
+  cursor: pointer;
+  font-family: diazo-mvb-ex-cond, sans-serif;
+  font-weight: 300;
+  font-style: normal;
+  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
+    rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+
+.card > div {
+  padding: 0 16px 8px 16px;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  border: 1px solid rgb(199, 199, 199);
+  border-radius: 4px;
+}
+
+.disabledCard {
+  cursor: not-allowed;
+  background-color: silver;
+}
+
+.flaw {
+  cursor: auto;
+}
+
+.title {
+  font-size: 32px;
+  padding-bottom: 4px;
+  font-family: diazo-mvb-cond, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.description {
+  color: rgb(122, 71, 3);
+  text-align: left;
+  font-size: 16px;
+}
+
+.effect {
+  border-radius: 4px;
+  background-color: black;
+  color: white;
+  font-size: 24px;
+  padding: 8px;
+  margin-top: auto;
+}
+
+.bonus {
+  background-color: white;
+  color: black;
+  padding: 0 8px;
+  font-size: 28px;
+  border-radius: 4px;
+  line-height: 28px;
+  font-family: printf, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.flaw .effect {
+  background-color: maroon;
+}

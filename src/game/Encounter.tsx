@@ -3,10 +3,26 @@ import Player from "./ui/Player";
 import Hand from "./ui/Hand";
 import Enemy from "./ui/Enemy";
 import PushYourLuck from "./ui/PushYourLuck";
+import { motion } from "framer-motion";
 
 type EncounterProps = {
   state: any;
   send: any;
+};
+
+const variants = {
+  setup: { x: 100, opacity: 0 },
+  entrance: {
+    x: 0,
+    opacity: 1,
+    transition: {
+      delay: 0.3,
+    },
+  },
+  exit: {
+    x: -100,
+    opacity: 0,
+  },
 };
 
 function Encounter({ state, send }: EncounterProps) {
@@ -22,7 +38,14 @@ function Encounter({ state, send }: EncounterProps) {
     currentAttack,
   } = state.context;
   return (
-    <>
+    <motion.section
+      key="encounter"
+      variants={variants}
+      initial="setup"
+      animate="entrance"
+      exit="exit"
+      style={{ flex: 1, display: "flex" }}
+    >
       {tableCards.length > 0 && (
         <div className={styles.overlay}>
           <PushYourLuck
@@ -56,7 +79,7 @@ function Encounter({ state, send }: EncounterProps) {
           <Hand hand={hand} handState={handState} send={send} />
         </div>
       </div>
-    </>
+    </motion.section>
   );
 }
 
