@@ -37,3 +37,11 @@
   border-radius: 8px;
   background-color: white;
 }
+
+.overlay {
+  position: absolute;
+  z-index: 999;
+  background-color: lightslategrey;
+  width: 100%;
+  height: calc(100% - 40px);
+}

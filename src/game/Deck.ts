@@ -14,12 +14,14 @@ export type Card = {
   type: CardType;
   id?: string;
   action?: string;
+  bonus?: number;
 };
 
 const tellATale: Card = {
   name: "Tell a tale",
   type: CardType.IDENTITY,
   description: "See how well you can improve this cover identity!",
+  bonus: 1,
 };
 
 const suspicion: Card = {
@@ -66,6 +68,10 @@ function buildDeck() {
   return shuffleDeck(deck);
 }
 
+function buildFlaw() {
+  return { ...suspicion, id: uid() };
+}
+
 const shuffleDeck = ([...deck]: Card[]) => {
   let m = deck.length;
   while (m) {
@@ -75,4 +81,16 @@ const shuffleDeck = ([...deck]: Card[]) => {
   return deck;
 };
 
-export { buildDeck, shuffleDeck };
+function isUnique(cards: Card[]) {
+  const tmpArr = [];
+  for (let obj in cards) {
+    if (tmpArr.indexOf(cards[obj].type) < 0) {
+      tmpArr.push(cards[obj].type);
+    } else {
+      return false;
+    }
+  }
+  return true;
+}
+
+export { buildDeck, buildFlaw, shuffleDeck, isUnique };

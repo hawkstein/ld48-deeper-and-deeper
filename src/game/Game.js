@@ -9,7 +9,7 @@ import Welcome from "./dialogue/Welcome";
 import BeatTheGame from "./dialogue/BeatTheGame";
 import Map from "./Map";
 import Encounter from "./Encounter";
-import { buildDeck, shuffleDeck, CardType } from "./Deck";
+import { buildDeck, shuffleDeck, CardType, isUnique, buildFlaw } from "./Deck";
 
 const sample = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
@@ -177,6 +177,7 @@ const gameMachine = Machine(
       hand: [],
       handState: [],
       tableCards: [],
+      focusId: null,
       suspicionRed: 50,
       suspicionBlue: 50,
       loyalty: 0.5,
@@ -219,6 +220,7 @@ const gameMachine = Machine(
       encounter: {
         id: "encounter",
         initial: "startTurn",
+        exit: ["tidyUpEncounter"],
         states: {
           startTurn: {
             entry: ["drawHand", "pickAttack"],
@@ -249,21 +251,33 @@ const gameMachine = Machine(
             },
             initial: "pickCards",
             states: {
-              pickCards: {},
+              pickCards: {
+                id: "pickCards",
+              },
               pushYourLuck: {
                 id: "pushYourLuck",
-                entry: [
-                  "drawCardForIdentity",
-                  (context) => {
-                    console.log(context.tableCards);
+                entry: ["drawCardForIdentity"],
+                exit: ["clearTableCards"],
+                initial: "choose",
+                states: {
+                  choose: {
+                    always: [{ target: "resolve", cond: "checkPushYourLuck" }],
+                    on: {
+                      NO_MORE: {
+                        target: "resolve",
+                      },
+                      UNO_MAS: {
+                        actions: ["drawCardForIdentity"],
+                      },
+                    },
                   },
-                ],
-                on: {
-                  NO_MORE: {
-                    target: "pickCards",
-                  },
-                  UNO_MAS: {
-                    action: ["drawCardForIdentity"],
+                  resolve: {
+                    entry: ["resolveIdentityCard"],
+                    on: {
+                      FINISHED: {
+                        target: "#pickCards",
+                      },
+                    },
                   },
                 },
               },
@@ -322,6 +336,10 @@ const gameMachine = Machine(
       didPlayerFail: (context) => {
         const { suspicionRed, suspicionBlue } = context;
         return suspicionRed >= 100 || suspicionBlue >= 100;
+      },
+      checkPushYourLuck: (context) => {
+        const { tableCards } = context;
+        return tableCards.length > 1 && !isUnique(tableCards);
       },
     },
     actions: {
@@ -387,6 +405,7 @@ const gameMachine = Machine(
           handState: [...handState, event.card.id],
           discard: [...context.discard, ...context.tableCards],
           tableCards: [],
+          focusId: event.card.id,
         };
       }),
       useAttackCard: assign((context, event) => {
@@ -411,6 +430,29 @@ const gameMachine = Machine(
           deck,
           discard,
         };
+      }),
+      clearTableCards: assign({
+        discard: (context) => [...context.tableCards, ...context.discard],
+        tableCards: [],
+        focusId: null,
+      }),
+      resolveIdentityCard: assign((context) => {
+        const { tableCards, hand, deck, focusId } = context;
+        if (tableCards.length > 1 && isUnique(tableCards)) {
+          const card = hand.find((card) => card.id === focusId);
+          card.bonus = Math.min(10, card.bonus + tableCards.length);
+        } else if (!isUnique(tableCards)) {
+          return {
+            deck: [...deck, buildFlaw()],
+          };
+        }
+        return {};
+      }),
+      tidyUpEncounter: assign({
+        deck: (context) =>
+          shuffleDeck([...context.deck, ...context.hand, ...context.discard]),
+        hand: [],
+        discard: [],
       }),
     },
   }

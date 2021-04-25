@@ -1,4 +1,4 @@
-import { Card } from "../Deck";
+import { Card, CardType } from "../Deck";
 import styles from "./Hand.module.css";
 import Button from "../../Button";
 
@@ -34,6 +34,9 @@ function Hand({
           >
             <span className={styles.title}>{card.name}</span>
             <span className={styles.description}>{card.description}</span>
+            {card.type === CardType.IDENTITY && (
+              <span>Defense: {card.bonus}</span>
+            )}
           </li>
         ))}
       </ul>
