@@ -6,13 +6,12 @@ type EnemyProps = {
 };
 
 function Enemy({ stats, attack }: EnemyProps) {
-  const { name, suspicion, roundsLeft } = stats;
+  const { name, suspicion } = stats;
   return (
     <div className={styles.enemy}>
       <span>Opponent:</span>
       <span>{name}</span>
-      <span>Suspicion: {suspicion}%</span>
-      <span>Rounds left: {roundsLeft}</span>
+      <span>Suspicion: {Math.min(suspicion, 100)}%</span>
       <span>Attack: {attack.label}</span>
     </div>
   );

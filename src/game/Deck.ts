@@ -65,7 +65,6 @@ function buildDeck() {
     { ...tellATale, id: uid() },
     { ...tellATale, id: uid() },
     { ...suspicion, id: uid() },
-    { ...suspicion, id: uid() },
     { ...sowDissent, id: uid() },
     { ...sowDissent, id: uid() },
     { ...ally, id: uid() },

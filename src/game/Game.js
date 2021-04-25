@@ -31,7 +31,7 @@ function buildMap() {
     },
     {
       type: "encounter",
-      label: "Bazza Wax: Useless git, he's been your handler for a while.",
+      label: "Bazza Wax: Useless, but with a mean streak.",
       enemies: "redHandlerOne",
       visited: false,
     },
@@ -41,7 +41,7 @@ function buildMap() {
     },
     {
       type: "encounter",
-      label: "Handler Two",
+      label: "Jeff Smith: Not the sharpest tool in the shed.",
       enemies: "blueHandlerOne",
       visited: false,
     },
@@ -51,7 +51,7 @@ function buildMap() {
     },
     {
       type: "encounter",
-      label: "Handler Three",
+      label: "Sally Smiler: Unlikely to be smiling.",
       enemies: "redHandlerTwo",
       visited: false,
     },
@@ -61,7 +61,7 @@ function buildMap() {
     },
     {
       type: "encounter",
-      label: "Handler Four",
+      label: "Basil Barker: Likely to be barking.",
       enemies: "blueHandlerTwo",
       visited: false,
     },
@@ -71,7 +71,7 @@ function buildMap() {
     },
     {
       type: "encounter",
-      label: "Boss Red",
+      label: "Abi Anarchy: Lucky line of work given the name.",
       enemies: "redHandlerThree",
       visited: false,
     },
@@ -81,8 +81,28 @@ function buildMap() {
     },
     {
       type: "encounter",
-      label: "Boss Blue",
+      label: "Eddie T: nice lad, shame about the politics.",
       enemies: "blueHandlerThree",
+      visited: false,
+    },
+    {
+      type: "map",
+      visited: false,
+    },
+    {
+      type: "encounter",
+      label: "Crimson Kath: Leader of the reds.",
+      enemies: "redHandlerFour",
+      visited: false,
+    },
+    {
+      type: "map",
+      visited: false,
+    },
+    {
+      type: "encounter",
+      label: "Lord Something: Leader of the blues.",
+      enemies: "blueHandlerFour",
       visited: false,
     },
     {
@@ -211,6 +231,7 @@ function createGameMachine() {
                   target: "endTurn",
                 },
               },
+              always: [{ target: "#playerSucceed", cond: "didPlayerSucceed" }],
               initial: "pickCards",
               states: {
                 pickCards: {
@@ -277,6 +298,7 @@ function createGameMachine() {
               always: [{ target: "startTurn" }],
             },
             playerSucceed: {
+              id: "playerSucceed",
               type: "final",
               always: [
                 {
@@ -328,7 +350,7 @@ function createGameMachine() {
           const { map, location, suspicionRed, suspicionBlue } = context;
           const enemy = enemies[map[location].enemies];
           return (
-            (enemy.suspicion >= 100 || enemy.roundsLeft <= 0) &&
+            enemy.suspicion >= 100 &&
             !(suspicionRed >= 100 || suspicionBlue >= 100)
           );
         },
@@ -375,9 +397,9 @@ function createGameMachine() {
             currentAttack,
           } = context;
           const enemy = enemies[map[location].enemies];
-          if (enemy) {
+          /*if (enemy) {
             enemy.roundsLeft = enemy.roundsLeft - 1;
-          }
+          }*/
           const defense = hand
             .filter(
               (card) =>

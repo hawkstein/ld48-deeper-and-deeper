@@ -61,17 +61,22 @@ function Map({ map, okHandler, enemies: enemyMap }: MapProps) {
     >
       <h1>Your route to freedom... or power...</h1>
       <ul>
-        {map.map(({ visited, label, enemies }) => (
-          <li
-            key={label}
-            className={`${styles.enemy} ${getStyle(
-              visited,
-              enemyMap[enemies].faction
-            )}`}
-          >
-            {label}
-          </li>
-        ))}
+        {map.map(({ visited, label, enemies }) => {
+          const [name, description] = label.split(":");
+          return (
+            <li
+              key={label}
+              className={`${styles.enemy} ${visited ? styles.visited : ""}`}
+            >
+              <span
+                className={`${getStyle(visited, enemyMap[enemies].faction)}`}
+              >
+                {name}:
+              </span>{" "}
+              {description}
+            </li>
+          );
+        })}
       </ul>
       <div style={{ display: "flex" }}>
         <Button onClick={okHandler}>{grabLabel()}</Button>

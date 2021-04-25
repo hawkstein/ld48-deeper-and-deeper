@@ -56,7 +56,13 @@ function MenuScreen() {
             Start Game
           </Button>
         </li>
-        <li>
+      </ul>
+    </motion.section>
+  );
+}
+
+/**
+ * <li>
           <Button
             onClick={() => {
               send("OPTIONS");
@@ -65,9 +71,6 @@ function MenuScreen() {
             Options
           </Button>
         </li>
-      </ul>
-    </motion.section>
-  );
-}
+ */
 
 export default MenuScreen;

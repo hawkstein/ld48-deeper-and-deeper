@@ -46,7 +46,7 @@
   font-size: 36px;
   font-weight: 800;
   color: white;
-  background: rgb(151, 120, 53);
+  background: rgb(115, 53, 151);
   will-change: transform;
   transform: translateY(-4px);
   transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
