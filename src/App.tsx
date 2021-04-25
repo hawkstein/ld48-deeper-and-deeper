@@ -27,7 +27,7 @@ const appMachine = Machine({
       on: { MENU: "menu" },
     },
     play: {
-      on: { END: "gameOver" },
+      on: { END: "gameOver", MENU: "menu" },
     },
     gameOver: {
       on: { MENU: "menu" },

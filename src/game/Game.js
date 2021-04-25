@@ -112,9 +112,29 @@ function buildMap() {
       visited: false,
     },
     {
+      type: "map",
+      visited: false,
+    },
+    {
+      type: "encounter",
+      label: "Boss Red",
+      enemies: "redHandlerThree",
+      visited: false,
+    },
+    {
+      type: "map",
+      visited: false,
+    },
+    {
+      type: "encounter",
+      label: "Boss Blue",
+      enemies: "blueHandlerThree",
+      visited: false,
+    },
+    {
       type: "dialogue",
       content: <BeatTheGame />,
-      visited: true,
+      visited: false,
     },
   ];
   return map;
@@ -235,24 +255,36 @@ const gameMachine = Machine(
               END_TURN: {
                 target: "endTurn",
               },
-              [CardType.ACTION]: {
-                actions: ["useActionCard"],
-              },
-              [CardType.IDENTITY]: {
-                target: ".pushYourLuck",
-                actions: ["useIdentityCard"],
-              },
-              [CardType.RESOURCE]: {
-                actions: ["useResourceCard"],
-              },
-              [CardType.ATTACK]: {
-                actions: ["useAttackCard"],
-              },
             },
             initial: "pickCards",
             states: {
               pickCards: {
                 id: "pickCards",
+                on: {
+                  [CardType.ACTION]: {
+                    actions: ["useActionCard"],
+                  },
+                  [CardType.IDENTITY]: {
+                    target: "pushYourLuck",
+                    actions: ["useIdentityCard"],
+                  },
+                  [CardType.RESOURCE]: {
+                    target: "pickResourceTarget",
+                    cond: "thereAreCardsToPick",
+                    actions: ["useResourceCard"],
+                  },
+                  [CardType.ATTACK]: {
+                    actions: ["useAttackCard"],
+                  },
+                },
+              },
+              pickResourceTarget: {
+                on: {
+                  [CardType.FLAW]: {
+                    target: "#pickCards",
+                    actions: ["selectCard"],
+                  },
+                },
               },
               pushYourLuck: {
                 id: "pushYourLuck",
@@ -302,7 +334,15 @@ const gameMachine = Machine(
               },
             ],
           },
-          playerFailure: { type: "final" },
+          playerFailure: {
+            type: "final",
+            entry: [
+              (context) => {
+                console.log("GAME OVER");
+                context.appSend("END");
+              },
+            ],
+          },
         },
       },
     },
@@ -329,9 +369,12 @@ const gameMachine = Machine(
         );
       },
       didPlayerSucceed: (context) => {
-        const { map, location } = context;
+        const { map, location, suspicionRed, suspicionBlue } = context;
         const enemy = enemies[map[location].enemies];
-        return enemy.suspicion >= 100 || enemy.roundsLeft <= 0;
+        return (
+          (enemy.suspicion >= 100 || enemy.roundsLeft <= 0) &&
+          !(suspicionRed >= 100 || suspicionBlue >= 100)
+        );
       },
       didPlayerFail: (context) => {
         const { suspicionRed, suspicionBlue } = context;
@@ -340,6 +383,10 @@ const gameMachine = Machine(
       checkPushYourLuck: (context) => {
         const { tableCards } = context;
         return tableCards.length > 1 && !isUnique(tableCards);
+      },
+      thereAreCardsToPick: (context) => {
+        const { hand } = context;
+        return hand.findIndex((card) => card.type === CardType.FLAW) > -1;
       },
     },
     actions: {
@@ -364,6 +411,8 @@ const gameMachine = Machine(
       evaluateEndTurn: assign((context) => {
         const {
           map,
+          hand,
+          handState,
           location,
           suspicionRed,
           suspicionBlue,
@@ -373,14 +422,23 @@ const gameMachine = Machine(
         if (enemy) {
           enemy.roundsLeft = enemy.roundsLeft - 1;
         }
-        console.log(enemy.faction === "Red" ? 1 : 0);
+        const defense = hand
+          .filter(
+            (card) =>
+              card.type === CardType.IDENTITY && handState.includes(card.id)
+          )
+          .reduce((prev, curr) => prev + curr.bonus, 0);
+        const red = enemy.faction === "Red" ? 1 : 0;
+        const blue = enemy.faction === "Blue" ? 1 : 0;
+        const flaws =
+          hand.filter((card) => card.type === CardType.FLAW).length * 2;
+        const finalShift = currentAttack.strength + flaws - defense;
+        console.log(
+          `finalShift: ${finalShift} (${currentAttack.strength} + ${flaws} - ${defense})`
+        );
         return {
-          suspicionRed:
-            suspicionRed +
-            currentAttack.strength * (enemy.faction === "Red" ? 1 : 0),
-          suspicionBlue:
-            suspicionBlue +
-            currentAttack.strength * (enemy.faction === "Blue" ? 1 : 0),
+          suspicionRed: suspicionRed + finalShift * red,
+          suspicionBlue: suspicionBlue + finalShift * blue,
           discard: [...context.discard, ...context.tableCards],
           tableCards: [],
         };
@@ -395,9 +453,13 @@ const gameMachine = Machine(
           handState: [...handState, event.card.id],
         };
       }),
-      useResourceCard: (context, event) => {
+      useResourceCard: assign((context, event) => {
         console.log(`Resource! ${event.card.id}`);
-      },
+        const { handState } = context;
+        return {
+          handState: [...handState, event.card.id],
+        };
+      }),
       useIdentityCard: assign((context, event) => {
         console.log(`Identity! ${event.card.id}`);
         const { handState } = context;
@@ -410,10 +472,21 @@ const gameMachine = Machine(
       }),
       useAttackCard: assign((context, event) => {
         console.log(`Attack! ${event.card.id}`);
-        const { map, location, handState } = context;
+        const { map, location, handState, loyalty } = context;
         const enemy = enemies[map[location].enemies];
         if (enemy) {
-          enemy.suspicion += 3;
+          // add strength to the attack if they are more loyal to that faction
+          console.log(loyalty);
+          let strength = 0;
+          if (enemy.faction === "Red") {
+            strength = loyalty - 0.5;
+          } else {
+            strength = 0.5 - loyalty;
+          }
+          console.log(strength);
+          const bonus = Math.ceil(5 * (strength / 0.5));
+          console.log(bonus);
+          enemy.suspicion += 3 + bonus;
         }
         return {
           handState: [...handState, event.card.id],
@@ -441,18 +514,29 @@ const gameMachine = Machine(
         if (tableCards.length > 1 && isUnique(tableCards)) {
           const card = hand.find((card) => card.id === focusId);
           card.bonus = Math.min(10, card.bonus + tableCards.length);
-        } else if (!isUnique(tableCards)) {
           return {
             deck: [...deck, buildFlaw()],
           };
+        } else {
+          const card = hand.find((card) => card.id === focusId);
+          card.bonus = Math.max(0, card.bonus - 1);
+          if (card.bonus === 0) {
+            return {
+              deck: [...deck, buildFlaw()],
+            };
+          }
+          return {};
         }
-        return {};
       }),
       tidyUpEncounter: assign({
         deck: (context) =>
           shuffleDeck([...context.deck, ...context.hand, ...context.discard]),
         hand: [],
         discard: [],
+      }),
+      selectCard: assign({
+        hand: (context, event) =>
+          context.hand.filter((card) => card.id !== event.card.id),
       }),
     },
   }
@@ -464,8 +548,11 @@ function GameRouter({ state, send }) {
     const nextLocation = location + 1;
     if (nextLocation < map.length) {
       send(map[nextLocation].type.toUpperCase());
+    } else {
+      state.context.appSend("MENU");
     }
   }
+  console.log(state.context);
   switch (state.toStrings()[0]) {
     case "dialogue":
       return (
@@ -490,11 +577,11 @@ function GameRouter({ state, send }) {
 
 function BrainJarGame() {
   const [_, sendToApp] = React.useContext(AppContext);
-  const [gameState, send] = useMachine(
-    gameMachine.withConfig({
-      appSend: sendToApp,
-    })
-  );
+  const extendedMachine = gameMachine.withContext({
+    ...gameMachine.context,
+    appSend: sendToApp,
+  });
+  const [gameState, send] = useMachine(extendedMachine);
   return (
     <div className="Game-container">
       <GameRouter state={gameState} send={send} />

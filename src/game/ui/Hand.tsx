@@ -6,7 +6,7 @@ function cardState(id: string | undefined, handState: string[]) {
   if (id && handState.includes(id)) {
     return styles.disabledCard;
   } else {
-    return null;
+    return ``;
   }
 }
 
@@ -25,7 +25,9 @@ function Hand({
         {hand.map((card: Card, index: number) => (
           <li
             key={`${index}`}
-            className={`${styles.card} ${cardState(card.id, handState)}`}
+            className={`${styles.card} ${cardState(card.id, handState)}${
+              card.type === CardType.FLAW ? styles.flaw : ``
+            }`}
             onClick={() => {
               if (card.id && !handState.includes(card.id)) {
                 send(card.type, { card });

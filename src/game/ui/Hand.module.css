@@ -24,6 +24,10 @@
   opacity: 0.5;
 }
 
+.flaw {
+  cursor: auto;
+}
+
 .options {
   display: flex;
   justify-content: center;
