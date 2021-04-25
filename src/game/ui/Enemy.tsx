@@ -11,7 +11,7 @@ function Enemy({ stats, attack }: EnemyProps) {
     <div className={styles.enemy}>
       <span>Opponent:</span>
       <span>{name}</span>
-      <span>Suspicion: {suspicion}</span>
+      <span>Suspicion: {suspicion}%</span>
       <span>Rounds left: {roundsLeft}</span>
       <span>Attack: {attack.label}</span>
     </div>
