@@ -6,6 +6,7 @@ import { useMachine } from "@xstate/react";
 import { Machine, assign } from "xstate";
 import Dialogue from "./Dialogue";
 import Welcome from "./dialogue/Welcome";
+import HowToPlay from "./dialogue/HowToPlay";
 import BeatTheGame from "./dialogue/BeatTheGame";
 import Map from "./Map";
 import Encounter from "./Encounter";
@@ -24,6 +25,12 @@ function buildMap() {
       content: <Welcome />,
       visited: true,
       okLabel: "I'll die trying. Maybe.",
+    },
+    {
+      type: "dialogue",
+      content: <HowToPlay />,
+      visited: false,
+      okLabel: "Let's go!",
     },
     {
       type: "map",
@@ -193,6 +200,11 @@ function createGameMachine() {
             ENCOUNTER: {
               target: "encounter",
               guard: "isEncounterNext",
+              actions: ["moveLocation"],
+            },
+            DIALOGUE: {
+              target: "dialogue",
+              guard: "isDialogueNext",
               actions: ["moveLocation"],
             },
           },
