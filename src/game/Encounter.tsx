@@ -33,12 +33,10 @@ function Encounter({ state, send }: EncounterProps) {
         </div>
       )}
       <div className={styles.wrap}>
-        <div className={styles.ui}>
-          <Player
-            suspicionRed={state.context.suspicionRed}
-            suspicionBlue={state.context.suspicionBlue}
-            loyalty={state.context.loyalty}
-          />
+        <div className={styles.deck}>
+          <span>{deck.length} cards left in the deck</span>
+          <span>{hand.length} cards in hand</span>
+          <span>{discard.length} cards in the discard</span>
         </div>
         <div className={styles.enemy}>
           <Enemy
@@ -46,11 +44,14 @@ function Encounter({ state, send }: EncounterProps) {
             attack={currentAttack}
           />
         </div>
-        <div className={styles.deck}>
-          <span>{deck.length} cards left in the deck</span>
-          <span>{hand.length} cards in hand</span>
-          <span>{discard.length} cards in the discard</span>
+        <div className={styles.ui}>
+          <Player
+            suspicionRed={state.context.suspicionRed}
+            suspicionBlue={state.context.suspicionBlue}
+            loyalty={state.context.loyalty}
+          />
         </div>
+
         <div className={styles.hand}>
           <Hand hand={hand} handState={handState} send={send} />
         </div>
