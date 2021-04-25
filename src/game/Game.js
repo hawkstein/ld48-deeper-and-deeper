@@ -11,59 +11,11 @@ import Map from "./Map";
 import Encounter from "./Encounter";
 import { buildDeck, shuffleDeck, CardType, isUnique, buildFlaw } from "./Deck";
 import { AnimatePresence } from "framer-motion";
+import { generateEnemies } from "./Enemies";
 
 const sample = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-const RED_HANDLER = {
-  name: "Red Handler Lvl 1",
-  faction: "Red",
-  suspicion: 50,
-  roundsLeft: 5,
-  attacks: [
-    {
-      label: "Accusation!",
-      strength: 3,
-    },
-    {
-      label: "Betrayer!",
-      strength: 5,
-    },
-    {
-      label: "Common suspicion",
-      strength: 2,
-    },
-  ],
-};
-
-const BLUE_HANDLER = {
-  name: "Blue Handler Lvl 1",
-  faction: "Blue",
-  suspicion: 50,
-  roundsLeft: 5,
-  attacks: [
-    {
-      label: "Accusation!",
-      strength: 3,
-    },
-    {
-      label: "Betrayer!",
-      strength: 5,
-    },
-    {
-      label: "Common suspicion",
-      strength: 2,
-    },
-  ],
-};
-
-const enemies = {
-  redHandlerOne: { ...RED_HANDLER },
-  redHandlerTwo: { ...RED_HANDLER },
-  redHandlerThree: { ...RED_HANDLER },
-  blueHandlerOne: { ...BLUE_HANDLER },
-  blueHandlerTwo: { ...BLUE_HANDLER },
-  blueHandlerThree: { ...BLUE_HANDLER },
-};
+const enemies = generateEnemies();
 
 function buildMap() {
   const map = [
@@ -79,7 +31,7 @@ function buildMap() {
     },
     {
       type: "encounter",
-      label: "Handler One",
+      label: "Bazza Wax: Useless git, he's been your handler for a while.",
       enemies: "redHandlerOne",
       visited: false,
     },

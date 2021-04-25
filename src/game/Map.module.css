@@ -4,28 +4,34 @@
 }
 
 .red {
-  background-color: red;
+  background-color: maroon;
   color: white;
 }
 
 .blue {
-  background-color: blue;
+  background-color: midnightblue;
   color: white;
 }
 
 .enemy {
   padding: 16px;
+  border-radius: 8px;
 }
 
 .map {
   flex: 1;
   width: 50%;
   position: absolute;
+  color: white;
+  font-family: printf, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
 }
 
 .map > ul {
   margin: 0;
-  padding: 0;
+  padding: 0 0 32px 0;
   list-style: none;
 }
 

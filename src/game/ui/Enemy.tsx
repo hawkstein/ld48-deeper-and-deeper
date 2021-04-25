@@ -9,7 +9,8 @@ function Enemy({ stats, attack }: EnemyProps) {
   const { name, suspicion, roundsLeft } = stats;
   return (
     <div className={styles.enemy}>
-      <span>You are facing: {name}</span>
+      <span>Opponent:</span>
+      <span>{name}</span>
       <span>Suspicion: {suspicion}</span>
       <span>Rounds left: {roundsLeft}</span>
       <span>Attack: {attack.label}</span>

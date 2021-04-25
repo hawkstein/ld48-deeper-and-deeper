@@ -12,6 +12,19 @@ type MapProps = {
   enemies: any;
 };
 
+const labels = [
+  "Let's get this sorted",
+  "Right you are then",
+  "Won't know what hit them",
+  "Knew I'd die like this",
+  "OK chum",
+  "Maybe I'll make it out",
+  "Alright pal",
+  "My chances feel good",
+];
+
+const grabLabel = () => labels[Math.floor(Math.random() * labels.length)];
+
 const getStyle = (visited: boolean, faction: "Red" | "Blue") => {
   if (visited) return styles.visited;
   if (faction === "Red") {
@@ -60,8 +73,8 @@ function Map({ map, okHandler, enemies: enemyMap }: MapProps) {
           </li>
         ))}
       </ul>
-      <div>
-        <Button onClick={okHandler}>OK</Button>
+      <div style={{ display: "flex" }}>
+        <Button onClick={okHandler}>{grabLabel()}</Button>
       </div>
     </motion.section>
   );

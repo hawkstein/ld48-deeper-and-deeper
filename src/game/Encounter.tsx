@@ -44,7 +44,7 @@ function Encounter({ state, send }: EncounterProps) {
       initial="setup"
       animate="entrance"
       exit="exit"
-      style={{ flex: 1, display: "flex" }}
+      style={{ flex: 1, display: "flex", width: "100%" }}
     >
       {tableCards.length > 0 && (
         <div className={styles.overlay}>
@@ -57,9 +57,13 @@ function Encounter({ state, send }: EncounterProps) {
       )}
       <div className={styles.wrap}>
         <div className={styles.deck}>
-          <span>{deck.length} cards left in the deck</span>
-          <span>{hand.length} cards in hand</span>
-          <span>{discard.length} cards in the discard</span>
+          <span className={styles.pile}>
+            {deck.length} card{deck.length === 1 ? "" : "s"} left in the deck
+          </span>
+          <span className={styles.pile}>
+            {discard.length} card{discard.length === 1 ? "" : "s"} in the
+            discard
+          </span>
         </div>
         <div className={styles.enemy}>
           <Enemy
