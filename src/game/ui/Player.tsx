@@ -13,25 +13,31 @@ function getLoyalty(loyalty: number): string {
   if (loyalty > 0.55 && loyalty <= 0.65) {
     return `Kinda Red`;
   }
-  if (loyalty > 0.65 && loyalty <= 0.85) {
+  if (loyalty > 0.65 && loyalty <= 0.75) {
     return `Hella Red`;
   }
-  if (loyalty > 0.85 && loyalty < 1) {
+  if (loyalty > 0.75 && loyalty <= 0.85) {
+    return `So damn Red`;
+  }
+  if (loyalty > 0.85 && loyalty <= 0.95) {
     return `Red to the core`;
   }
-  if (loyalty === 1) {
+  if (loyalty > 0.95) {
     return `Red Zealot (Max)`;
   }
   if (loyalty < 0.45 && loyalty >= 0.35) {
     return `Kinda Blue`;
   }
-  if (loyalty < 0.35 && loyalty >= 0.15) {
+  if (loyalty < 0.35 && loyalty >= 0.25) {
     return `Hella Blue`;
   }
-  if (loyalty < 0.15 && loyalty > 0) {
+  if (loyalty < 0.25 && loyalty >= 0.15) {
+    return `So damn Blue`;
+  }
+  if (loyalty < 0.15 && loyalty > 0.05) {
     return `True blue`;
   }
-  if (loyalty === 0) {
+  if (loyalty < 0.05) {
     return `Blue blood (Max)`;
   }
   return ``;
