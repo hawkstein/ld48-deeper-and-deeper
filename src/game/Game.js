@@ -338,7 +338,6 @@ const gameMachine = Machine(
             type: "final",
             entry: [
               (context) => {
-                console.log("GAME OVER");
                 context.appSend("END");
               },
             ],
@@ -476,16 +475,13 @@ const gameMachine = Machine(
         const enemy = enemies[map[location].enemies];
         if (enemy) {
           // add strength to the attack if they are more loyal to that faction
-          console.log(loyalty);
           let strength = 0;
           if (enemy.faction === "Red") {
             strength = loyalty - 0.5;
           } else {
             strength = 0.5 - loyalty;
           }
-          console.log(strength);
           const bonus = Math.ceil(5 * (strength / 0.5));
-          console.log(bonus);
           enemy.suspicion += 3 + bonus;
         }
         return {
@@ -552,11 +548,10 @@ function GameRouter({ state, send }) {
       state.context.appSend("MENU");
     }
   }
-  console.log(state.context);
   switch (state.toStrings()[0]) {
     case "dialogue":
       return (
-        <Dialogue okHandler={nextScreen}>
+        <Dialogue okHandler={nextScreen} okLabel="I'll die trying. Maybe.">
           {state.context.map[state.context.location].content}
         </Dialogue>
       );

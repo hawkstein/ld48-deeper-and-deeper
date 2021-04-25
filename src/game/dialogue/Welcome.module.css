@@ -1,0 +1,22 @@
+.welcome {
+  max-width: 600px;
+  color: white;
+  font-family: printf, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+  padding-bottom: 36px;
+}
+
+.big {
+  font-size: 36px;
+  text-align: center;
+}
+
+.reds {
+  background-color: maroon;
+}
+
+.blues {
+  background-color: midnightblue;
+}

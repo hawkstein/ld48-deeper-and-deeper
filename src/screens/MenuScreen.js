@@ -45,6 +45,7 @@ function MenuScreen() {
           }}
         />
       </div>
+      <p className="App-blurb">Perfect your lies to survive!</p>
       <ul className="App-list">
         <li>
           <Button
