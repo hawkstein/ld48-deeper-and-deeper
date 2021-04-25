@@ -29,12 +29,14 @@ function DisplayCard({
   cards,
   handState,
   send,
+  faction,
 }: {
   card: Card;
   index: number;
   cards: Card[];
   handState: string[];
   send: any;
+  faction: string;
 }) {
   return (
     <motion.li
@@ -51,7 +53,7 @@ function DisplayCard({
         }
       }}
     >
-      <div>
+      <div className={styles[faction.toLowerCase()]}>
         <span className={styles.title}>{card.name}</span>
         <span className={styles.description}>{card.description}</span>
         {card.type === CardType.IDENTITY && (

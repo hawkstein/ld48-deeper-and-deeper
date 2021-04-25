@@ -8,10 +8,12 @@ function Hand({
   hand,
   handState,
   send,
+  faction,
 }: {
   hand: Card[];
   handState: string[];
   send: any;
+  faction: string;
 }) {
   return (
     <>
@@ -24,6 +26,7 @@ function Hand({
             cards={cards}
             send={send}
             handState={handState}
+            faction={faction}
           />
         ))}
       </motion.ul>

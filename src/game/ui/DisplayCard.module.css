@@ -67,6 +67,10 @@
   font-style: normal;
 }
 
-.flaw .effect {
+.flaw .red .effect {
   background-color: maroon;
+}
+
+.flaw .blue .effect {
+  background-color: midnightblue;
 }

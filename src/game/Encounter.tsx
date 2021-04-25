@@ -80,7 +80,12 @@ function Encounter({ state, send }: EncounterProps) {
         </div>
 
         <div className={styles.hand}>
-          <Hand hand={hand} handState={handState} send={send} />
+          <Hand
+            hand={hand}
+            handState={handState}
+            send={send}
+            faction={enemies[map[location].enemies].faction}
+          />
         </div>
       </div>
     </motion.section>
