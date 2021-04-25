@@ -500,18 +500,18 @@ function createGameMachine() {
           const { tableCards, hand, deck, focusId } = context;
           if (tableCards.length > 1 && isUnique(tableCards)) {
             const card = hand.find((card) => card.id === focusId);
-            card.bonus = Math.min(10, card.bonus + tableCards.length);
+            card.bonus = Math.min(20, card.bonus + (tableCards.length - 1));
             return {
               deck: [...deck, buildFlaw()],
             };
           } else {
             const card = hand.find((card) => card.id === focusId);
             card.bonus = Math.max(0, card.bonus - 1);
-            if (card.bonus === 0) {
+            /**if (card.bonus === 0) {
               return {
                 deck: [...deck, buildFlaw()],
               };
-            }
+            }**/
             return {};
           }
         }),

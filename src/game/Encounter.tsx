@@ -52,6 +52,7 @@ function Encounter({ state, send }: EncounterProps) {
             cards={tableCards}
             matches={state.matches}
             send={send}
+            faction={enemies[map[location].enemies].faction}
           />
         </div>
       )}

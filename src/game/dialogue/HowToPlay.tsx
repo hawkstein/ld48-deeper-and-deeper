@@ -39,8 +39,8 @@ function HowToPlay() {
         drawing cards one at a time. Each card drawn adds to the cards defence
         value. However, increasing the cards defense will add a Under Suspicion
         to your deck. If you draw two of the same card or only one, then the
-        defense is decreased by one. If reduced to zero, an Under Suspicion is
-        added. You must play the card to activate the defense.
+        defense is decreased by one. You must play the card to activate the
+        defense. Max defense is 20.
       </p>
       <p>
         It is possible with strong enough defenses to reduce your suspicion each

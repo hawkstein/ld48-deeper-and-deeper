@@ -39,6 +39,10 @@ function GameOverScreen() {
           Your cover was blown and you'll head no deeper into either network!
         </p>
         <p>Thanks for playing!</p>
+        <p>
+          (If you'd like to play again, please refresh as there is a bug with
+          replays)
+        </p>
         <Button
           onClick={() => {
             send("MENU");
