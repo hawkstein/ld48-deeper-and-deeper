@@ -33,11 +33,11 @@ const JEFF_SMITH = {
     },
     {
       label: "Betrayer!",
-      strength: 6,
+      strength: 5,
     },
     {
       label: "Common suspicion",
-      strength: 3,
+      strength: 2,
     },
   ],
 };
@@ -51,14 +51,14 @@ const SALLY_SMILER = {
   attacks: [
     {
       label: "Accusation!",
-      strength: 5,
+      strength: 3,
     },
     {
-      label: "Betrayer!",
-      strength: 6,
+      label: "Damning Evidence!",
+      strength: 7,
     },
     {
-      label: "Common suspicion",
+      label: "Lies & falsehoods!",
       strength: 4,
     },
   ],
@@ -73,14 +73,18 @@ const BASIL_BARKER = {
   attacks: [
     {
       label: "Accusation!",
-      strength: 5,
+      strength: 3,
     },
     {
       label: "Betrayer!",
       strength: 6,
     },
     {
-      label: "Common suspicion",
+      label: "Damning Evidence!",
+      strength: 7,
+    },
+    {
+      label: "Lies & falsehoods!",
       strength: 4,
     },
   ],
@@ -95,15 +99,23 @@ const ABI_ANARCHY = {
   attacks: [
     {
       label: "Accusation!",
-      strength: 7,
+      strength: 3,
     },
     {
       label: "Betrayer!",
+      strength: 6,
+    },
+    {
+      label: "Damning Evidence!",
       strength: 7,
     },
     {
+      label: "Lies & falsehoods!",
+      strength: 4,
+    },
+    {
       label: "Common suspicion",
-      strength: 5,
+      strength: 2,
     },
   ],
 };
@@ -117,15 +129,23 @@ const EDDIE_T = {
   attacks: [
     {
       label: "Accusation!",
-      strength: 10,
+      strength: 3,
     },
     {
       label: "Betrayer!",
-      strength: 12,
+      strength: 6,
+    },
+    {
+      label: "Concrete Alibi!",
+      strength: 10,
+    },
+    {
+      label: "Lies & falsehoods!",
+      strength: 4,
     },
     {
       label: "Common suspicion",
-      strength: 9,
+      strength: 2,
     },
   ],
 };
@@ -139,15 +159,19 @@ const CRIMSON_KATH = {
   attacks: [
     {
       label: "Accusation!",
-      strength: 9,
+      strength: 3,
     },
     {
-      label: "Betrayer!",
-      strength: 14,
+      label: "Damning Evidence!",
+      strength: 7,
     },
     {
-      label: "Common suspicion",
-      strength: 9,
+      label: "Personnal Vendetta",
+      strength: 8,
+    },
+    {
+      label: "Lies & falsehoods!",
+      strength: 4,
     },
   ],
 };
@@ -160,16 +184,24 @@ const LORD_SOMETHING = {
   roundsLeft: 5,
   attacks: [
     {
-      label: "Accusation!",
+      label: "Concrete Alibi!",
       strength: 10,
     },
     {
-      label: "Betrayer!",
-      strength: 15,
+      label: "Accusation!",
+      strength: 3,
     },
     {
-      label: "Common suspicion",
-      strength: 12,
+      label: "Damning Evidence!",
+      strength: 7,
+    },
+    {
+      label: "Personnal Vendetta",
+      strength: 8,
+    },
+    {
+      label: "Lies & falsehoods!",
+      strength: 4,
     },
   ],
 };

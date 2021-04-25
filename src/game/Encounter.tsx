@@ -70,6 +70,8 @@ function Encounter({ state, send }: EncounterProps) {
           <Enemy
             stats={enemies[map[location].enemies]}
             attack={currentAttack}
+            hand={hand}
+            handState={handState}
           />
         </div>
         <div className={styles.ui}>
