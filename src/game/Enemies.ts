@@ -107,15 +107,15 @@ const ABI_ANARCHY = {
     },
     {
       label: "Damning Evidence!",
-      strength: 7,
+      strength: 10,
     },
     {
       label: "Lies & falsehoods!",
-      strength: 4,
+      strength: 8,
     },
     {
       label: "Common suspicion",
-      strength: 2,
+      strength: 4,
     },
   ],
 };
@@ -129,7 +129,7 @@ const EDDIE_T = {
   attacks: [
     {
       label: "Accusation!",
-      strength: 3,
+      strength: 6,
     },
     {
       label: "Betrayer!",
@@ -137,15 +137,15 @@ const EDDIE_T = {
     },
     {
       label: "Concrete Alibi!",
-      strength: 10,
+      strength: 14,
     },
     {
       label: "Lies & falsehoods!",
-      strength: 4,
+      strength: 7,
     },
     {
       label: "Common suspicion",
-      strength: 2,
+      strength: 4,
     },
   ],
 };
@@ -159,19 +159,19 @@ const CRIMSON_KATH = {
   attacks: [
     {
       label: "Accusation!",
-      strength: 3,
-    },
-    {
-      label: "Damning Evidence!",
-      strength: 7,
-    },
-    {
-      label: "Personnal Vendetta",
       strength: 8,
     },
     {
+      label: "Damning Evidence!",
+      strength: 14,
+    },
+    {
+      label: "Personnal Vendetta",
+      strength: 12,
+    },
+    {
       label: "Lies & falsehoods!",
-      strength: 4,
+      strength: 7,
     },
   ],
 };
@@ -185,15 +185,15 @@ const LORD_SOMETHING = {
   attacks: [
     {
       label: "Concrete Alibi!",
-      strength: 10,
+      strength: 14,
     },
     {
       label: "Accusation!",
-      strength: 3,
+      strength: 5,
     },
     {
       label: "Damning Evidence!",
-      strength: 7,
+      strength: 17,
     },
     {
       label: "Personnal Vendetta",
@@ -201,7 +201,7 @@ const LORD_SOMETHING = {
     },
     {
       label: "Lies & falsehoods!",
-      strength: 4,
+      strength: 10,
     },
   ],
 };
