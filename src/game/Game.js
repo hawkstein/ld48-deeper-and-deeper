@@ -409,9 +409,9 @@ function createGameMachine() {
             currentAttack,
           } = context;
           const enemy = enemies[map[location].enemies];
-          /*if (enemy) {
+          if (enemy) {
             enemy.roundsLeft = enemy.roundsLeft - 1;
-          }*/
+          }
           const defense = hand
             .filter(
               (card) =>

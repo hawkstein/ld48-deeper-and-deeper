@@ -84,6 +84,23 @@ function PushYourLuck({
           </>
         )}
       </div>
+      <div className={pushStyles.instructions}>
+        <p>Draw cards one by one, you don't want to draw two matching cards.</p>
+        <p>
+          For each unique card, you'll build a better deep cover, and increase
+          its defense by one.
+        </p>
+        <p>
+          When you increase defence however, an 'Under Suspicion' card is added
+          to your deck.
+        </p>
+        <p>If you match two cards, the defense will decrease by one!</p>
+        <p>
+          Tip: when cards have a high defence, it can be worthwhile picking 'No
+          more' straight away. They will just lose one defence but will help a
+          lot this turn.
+        </p>
+      </div>
     </div>
   );
 }

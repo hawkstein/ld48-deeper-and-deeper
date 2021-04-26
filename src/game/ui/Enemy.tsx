@@ -1,8 +1,6 @@
 import styles from "./Enemy.module.css";
 import { AnimatePresence, motion } from "framer-motion";
-import { uid } from "uid";
 import { Card, CardType } from "../Deck";
-import React from "react";
 
 type EnemyProps = {
   stats: any;
@@ -12,11 +10,7 @@ type EnemyProps = {
 };
 
 function Enemy({ stats, attack, hand, handState }: EnemyProps) {
-  const { name, suspicion, faction } = stats;
-  const [attackKey, setAttackKey] = React.useState(uid());
-  React.useEffect(() => {
-    setAttackKey(uid());
-  }, [attack, setAttackKey]);
+  const { name, suspicion, faction, roundsLeft } = stats;
   const defense = hand
     .filter(
       (card) =>
@@ -33,8 +27,30 @@ function Enemy({ stats, attack, hand, handState }: EnemyProps) {
           {name}
         </span>
       </div>
+      <AnimatePresence>
+        <motion.div
+          key={`${Math.min(suspicion, 100)}`}
+          exit={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          initial={{
+            y: 20,
+            opacity: 0,
+          }}
+          style={{
+            position: "absolute",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <span>Suspicion: {Math.min(suspicion, 100)}%</span>
+        </motion.div>
+      </AnimatePresence>
 
-      <span>Suspicion: {Math.min(suspicion, 100)}%</span>
       <div
         style={{
           position: "relative",
@@ -47,12 +63,22 @@ function Enemy({ stats, attack, hand, handState }: EnemyProps) {
       >
         <AnimatePresence>
           <motion.div
-            key={attackKey}
+            key={`${attack.label}${roundsLeft}`}
             exit={{
               opacity: 0,
+              y: 10,
             }}
             animate={{
               opacity: 1,
+              y: 0,
+              scale: 1,
+              rotate: 0,
+            }}
+            initial={{
+              y: -10,
+              opacity: 0,
+              scale: 2,
+              rotate: Math.floor(Math.random() * 20) - 10,
             }}
             style={{
               position: "absolute",
